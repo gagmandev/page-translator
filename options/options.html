@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>网页翻译助手 · 设置</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <img src="../icons/icon48.png" alt="" class="hero-logo">
+      <div>
+        <h1>网页翻译助手</h1>
+        <p>整页翻译 / 双语对照 · 多引擎自动切换</p>
+      </div>
+    </header>
+
+    <!-- 引擎 -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>翻译引擎</h2>
+        <button id="btn-test" class="btn-ghost">测试全部</button>
+      </div>
+      <p class="hint">「自动选择」会并发探测下列引擎，用最先响应的那个；某个引擎失效时会自动降级到下一个。</p>
+
+      <div class="engines" id="engine-list"></div>
+
+      <div id="custom-box" class="custom-box hidden">
+        <div class="row">
+          <label class="lbl" for="custom-base">接口地址</label>
+          <input id="custom-base" type="text" placeholder="https://api.openai.com/v1" spellcheck="false">
+        </div>
+        <div class="row">
+          <label class="lbl" for="custom-key">API Key</label>
+          <input id="custom-key" type="password" placeholder="sk-..." spellcheck="false">
+        </div>
+        <div class="row">
+          <label class="lbl" for="custom-model">模型</label>
+          <input id="custom-model" type="text" placeholder="gpt-4o-mini" spellcheck="false">
+        </div>
+        <p class="hint">兼容任何 OpenAI 格式的 <code>/chat/completions</code> 接口，包括各类中转服务、DeepSeek、通义千问等。</p>
+      </div>
+    </section>
+
+    <!-- 翻译行为 -->
+    <section class="card">
+      <h2>翻译行为</h2>
+
+      <div class="row">
+        <label class="lbl" for="target-lang">目标语言</label>
+        <select id="target-lang"></select>
+      </div>
+
+      <div class="row">
+        <label class="lbl">显示方式</label>
+        <div class="segmented" id="mode-group">
+          <button class="seg" data-mode="replace">替换原文</button>
+          <button class="seg" data-mode="dual">双语对照</button>
+        </div>
+      </div>
+
+      <div class="row switch-row">
+        <div>
+          <div class="lbl">打开网页后自动翻译</div>
+          <div class="sub">默认关闭，避免打扰</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="auto-translate">
+          <span></span>
+        </label>
+      </div>
+
+      <div class="row switch-row">
+        <div>
+          <div class="lbl">显示页面悬浮球</div>
+          <div class="sub">右下角快速切换翻译状态</div>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="floating-ball">
+          <span></span>
+        </label>
+      </div>
+
+      <div class="row">
+        <label class="lbl" for="exclude">排除的网站</label>
+        <textarea id="exclude" rows="4" spellcheck="false"
+          placeholder="每行一个域名，例如：&#10;mail.google.com&#10;github.com"></textarea>
+        <p class="hint">这些站点不会自动翻译，手动点击仍然可以翻译。</p>
+      </div>
+    </section>
+
+    <!-- 快捷键 -->
+    <section class="card">
+      <div class="card-hd">
+        <h2>快捷键</h2>
+        <button id="btn-shortcuts" class="btn-ghost">设置快捷键</button>
+      </div>
+      <div class="kv"><span>翻译 / 还原当前页面</span><kbd id="hotkey-kbd">Alt + T</kbd></div>
+      <p class="hint">
+        这里显示的是浏览器实际分配的全局键。即使显示「页面内」，在网页里按
+        <kbd>Alt + T</kbd> 也依然有效（扩展在页面里也监听了一次按键）。
+      </p>
+      <p class="hint">也可以在页面任意位置右键，选择「翻译此页面」或「翻译选中内容」。</p>
+    </section>
+
+    <!-- 说明 -->
+    <section class="card explain">
+      <h2>为什么浏览器自带翻译会提示「无法翻译此页面」？</h2>
+      <ul>
+        <li><b>翻译服务连不上。</b>Chrome / Edge 的内置翻译依赖 Google 的翻译服务，网络不通时会直接提示无法翻译，没有备选方案。</li>
+        <li><b>页面语言标记缺失。</b>有些页面没有正确声明 <code>lang</code>，浏览器无法判断源语言。</li>
+        <li><b>页面结构特殊。</b>内容在 iframe、Shadow DOM 或动态渲染的容器里，浏览器翻译抓不到。</li>
+      </ul>
+      <p>
+        本扩展不依赖浏览器的翻译引擎：它自己遍历页面上的文本节点，把译文直接写回页面，
+        所以内置翻译失效时它依然能用。同时内置了多个翻译引擎，任何一个失效都会自动切换。
+      </p>
+    </section>
+
+    <footer class="ft">
+      <button id="btn-clear" class="btn-ghost">清除翻译缓存</button>
+      <span id="saved-tip" class="saved">设置已自动保存</span>
+    </footer>
+  </div>
+
+  <script type="module" src="options.js"></script>
+</body>
+</html>

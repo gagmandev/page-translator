@@ -1,0 +1,46 @@
+/* 双语对照模式下插入页面的译文样式 */
+
+.wt-trans {
+  color: #1a73e8 !important;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  opacity: 0.95;
+}
+
+.wt-trans-block {
+  display: block;
+  box-sizing: border-box;
+  max-width: 100%;
+  margin: 2px 0 0 0;
+  padding-left: 8px;
+  border-left: 2px solid rgba(26, 115, 232, 0.28);
+  opacity: 1;
+  overflow-wrap: break-word;
+}
+
+/* 深色页面里用更亮的蓝色，避免看不清 */
+@media (prefers-color-scheme: dark) {
+  .wt-trans {
+    color: #7cb0ff !important;
+  }
+  .wt-trans-block {
+    border-left-color: rgba(124, 176, 255, 0.32);
+  }
+}
+
+/* 翻译中的轻微闪烁提示（仅用于段落级译文占位） */
+@keyframes wt-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.wt-trans {
+  animation: wt-fade-in 0.18s ease;
+}

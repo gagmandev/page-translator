@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>网页翻译助手</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="hd">
+    <img src="../icons/icon32.png" alt="" class="logo">
+    <div class="titles">
+      <h1>网页翻译助手</h1>
+      <p id="engine-line" class="sub">正在读取状态…</p>
+    </div>
+    <button id="btn-settings" class="icon-btn" title="设置">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+        <circle cx="12" cy="12" r="3"></circle>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+      </svg>
+    </button>
+  </header>
+
+  <main class="body">
+    <button id="btn-main" class="primary">
+      <span id="btn-main-label">翻译此页</span>
+      <kbd id="hotkey-kbd">Alt+T</kbd>
+    </button>
+
+    <div class="field">
+      <label class="label">显示方式</label>
+      <div class="segmented" id="mode-group">
+        <button class="seg" data-mode="replace">替换原文</button>
+        <button class="seg" data-mode="dual">双语对照</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="lang">翻译成</label>
+      <select id="lang"></select>
+    </div>
+
+    <div id="notice" class="notice hidden"></div>
+  </main>
+
+  <footer class="ft">
+    <span id="stat">—</span>
+    <button id="btn-more" class="link">更多设置</button>
+  </footer>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
