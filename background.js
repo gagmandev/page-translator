@@ -2,7 +2,7 @@
  * background.js — 扩展的服务端逻辑
  * 负责：设置读写、引擎选择与故障降级、翻译缓存、右键菜单、快捷键、角标
  */
-import { runEngine, probeEngine, ENGINES, AUTO_ORDER } from './lib/engines.js';
+import { runEngine, probeEngine, ENGINES, AUTO_ORDER, looksLikeApiError } from './lib/engines.js';
 
 const DEFAULTS = {
   engine: 'auto',          // auto | tencent | google | youdao | mymemory | custom
@@ -194,16 +194,18 @@ async function translateWithFallback(texts, targetLang, settings) {
     try {
       const translated = await runEngine(engineId, missingTexts, targetLang, settings);
 
-      // 质量校验：某个引擎对一批文本大量返回空，说明这轮不可靠，直接换下一个。
-      // 没有这道检查，页面会出现「翻了一半」的情况，比整页失败更让人困惑。
-      const empty = translated.filter(t => typeof t !== 'string' || !t.trim()).length;
-      if (translated.length >= 3 && empty / translated.length > 0.4) {
-        throw new Error('返回结果不完整（' + empty + '/' + translated.length + ' 条为空）');
+      // 质量校验：某个引擎对一批文本大量返回空、或返回的其实是接口错误提示，
+      // 说明这轮不可靠，直接换下一个。没有这道检查，整页会被错误文本覆盖。
+      const bad = translated.filter(t =>
+        typeof t !== 'string' || !t.trim() || looksLikeApiError(t)).length;
+      if (translated.length >= 3 && bad / translated.length > 0.4) {
+        throw new Error('返回结果异常（' + bad + '/' + translated.length + ' 条不可用）');
       }
 
       missingIndexes.forEach((originalIndex, k) => {
         const value = translated[k];
         if (typeof value !== 'string' || !value.trim()) return;   // 个别空结果保留原文
+        if (looksLikeApiError(value)) return;                     // 单条是接口报错，丢弃
         results[originalIndex] = value;
         cacheSet(engineId, targetLang, missingTexts[k], value);
       });

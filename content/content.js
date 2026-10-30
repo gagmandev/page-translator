@@ -171,9 +171,24 @@
     return original.length / total > 0.7;          // 占绝对多数才算主体
   }
 
+  /**
+   * 兜底防线：翻译接口出错时，有的会把错误提示当成译文返回
+   * （MyMemory 用 auto 源语言时就会返回 "'AUTO' IS AN INVALID SOURCE LANGUAGE..."）。
+   * 这类文本一旦写进页面会把整页内容覆盖掉，所以这里再拦一次。
+   */
+  function looksLikeApiError(text) {
+    if (typeof text !== 'string') return false;
+    const t = text.trim();
+    if (!t) return false;
+    if (/INVALID\s+(SOURCE|TARGET)\s+LANGUAGE|LANGPAIR\s*=|RFC3066|QUOTA|API\s*KEY|RATE\s*LIMIT/i.test(t)) return true;
+    if (t.length > 40 && t === t.toUpperCase() && /[A-Z]{4,}/.test(t)) return true;
+    return false;
+  }
+
   function applyTranslation(node, translated) {
     const original = node.nodeValue;
     if (!translated || translated === original) return false;
+    if (looksLikeApiError(translated)) return false;
 
     if (state.mode === 'dual') {
       const parent = node.parentElement;
